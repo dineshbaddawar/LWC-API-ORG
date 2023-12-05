@@ -1,0 +1,12 @@
+<template>
+    <div class="accordion-container">
+        <div class="accordion-header" onclick={toggleAccordion}>
+            <lightning-icon icon-name={iconName} size="small"></lightning-icon>
+            <div class="header-text"> <lightning-icon icon-name='doctype:folder' alternative-text='folder' size='small' title='folder'></lightning-icon>{headerText}</div>
+        </div>
+        <div class={accordionClass}>
+            <!-- Content of your accordion section goes here -->
+            <p>This is the content of the accordion section.</p>
+        </div>
+    </div>
+</template>

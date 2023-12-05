@@ -1,0 +1,46 @@
+<template>
+    <div class="slds-box slds-theme–default">
+<table class="slds-table slds-table_cell-buffer slds-table_bordered slds-table_col-bordered">
+                <thead>
+                <tr class="slds-line-height_reset">
+                    <th class="" scope="col">
+        <div class="slds-truncate" title="">Sr No</div>
+      </th>
+                    <th class="" scope="col">
+        <div class="slds-truncate" title=""> Name</div>
+      </th>
+                   <th class="" scope="col">
+        <div class="slds-truncate" title="">Email</div>
+      </th>
+                    <th class="" scope="col">
+        <div class="slds-truncate" title="">Phone</div>
+      </th>
+                </tr>
+            </thead>
+            <tbody>
+                <template  for:each={conList} for:item="item" for:index="index">
+                    <tr class="slds-hint-parent" key = {item.Id}>
+                        <td data-label="">
+                            <div class="slds-truncate">{index}</div>
+                        </td>
+                        <th data-label="Opportunity Name" scope="row">
+                            <div class="slds-truncate" title={item.Name}>
+                            <a target="_blank" href={item.Id}>{item.Name}</a>
+                            </div>
+                        </th>
+                        <td data-label={item.Email}>
+                            <div class="slds-truncate" title="">{item.Email}</div>
+                        </td>
+                         <td data-label={item.Phone}>
+                            <div class="slds-truncate" title="">{item.Phone}</div>
+                        </td>
+                    </tr>
+                </template>
+            </tbody>
+        </table>
+        
+       
+    </div>
+
+
+</template>
