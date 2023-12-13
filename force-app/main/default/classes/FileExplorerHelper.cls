@@ -36,6 +36,7 @@ public class FileExplorerHelper {
         return null;
     }
     
+    // ============================================================================================================
     @AuraEnabled 
     public static List<Document_Category__c> getDocCateList(String opportunityId){
           List<Document_Category__c> DocCategoryList = new List<Document_Category__c>();
@@ -53,4 +54,26 @@ public class FileExplorerHelper {
        return null;
     }
     
+        // ============================================================================================================
+
+    @AuraEnabled
+    public static string PreviewPDF(String procDocId){
+        try{
+            String blobFile;
+            Document_File__c appDocAttach = new Document_File__c();
+            if(procDocId !=null){
+                 appDocAttach = [SELECT id,Name,Attachement_Id__c FROM Document_File__c WHERE id =: procDocId];
+                if(appDocAttach != null && appDocAttach.Attachement_Id__c != null){
+                    Attachment att = [select id,name,body,contenttype  from attachment where id =: appDocAttach.Attachement_Id__c limit 1];
+                    System.debug('att === >'+att);
+                    blobFile = EncodingUtil.base64Encode(att.body);  //  EncodingUtil.Base64Encode(att.body); 'data:application/pdf;base64,'+
+                    System.debug('blobFile == >'+blobFile);
+                    return blobFile;
+                }
+            }
+        }catch(Exception e){
+            System.debug('The Error ::'+e.getMessage() +' AND Error Line No :'+e.getLineNumber());
+        }
+        return 'ERROR';
+    }
 }
