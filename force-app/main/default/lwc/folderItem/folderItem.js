@@ -1,21 +1,46 @@
 import { LightningElement, api, wire, track } from 'lwc';
 import folderpng from '@salesforce/resourceUrl/folderpng';
 import PreviewPDF from '@salesforce/apex/FileExplorerHelper.PreviewPDF';
-
-
 export default class FolderItem extends LightningElement {
      @api item = [];
      selectedRecordIdPDF;
+     selectedFolderName;
      showPDF = false;
      error;
      pdfUrl;
      folderfile = folderpng;
+     showUploadFileButton = false;
+     showDeleteFileButton = false;
+     myCustomVarinat;
 
      handleItemClickNew(event){
           debugger;
           this.selectedRecordIdPDF = event.currentTarget.dataset.recordId;
+          const clickedItemId = event.currentTarget.dataset.recordId;
+          this.item = this.item.map(item => ({
+               ...item,
+               items: item.items.map(subItem => ({
+                   ...subItem,
+                   variant: subItem.id === clickedItemId ? 'success' : 'default'
+               }))
+           }));
+          if ( this.selectedRecordIdPDF !=undefined) {
+               this.showUploadFileButton = false;
+               this.showDeleteFileButton = true;
+              
+          }
           this.getViewPreviewFile();
           console.log('Selected Record ID:', selectedRecordId);
+     }
+
+     handleFolderClick(event) {
+          debugger;
+          this.selectedFolderName = event.currentTarget.dataset.recordId;
+          if (this.selectedFolderName != undefined) {
+               this.showUploadFileButton = true;
+               this.showDeleteFileButton = false;
+               
+          }
      }
      
      getViewPreviewFile(){
@@ -25,9 +50,7 @@ export default class FolderItem extends LightningElement {
               if(result){
               this.showPDF = true;
                if(result){
-                   // Create a Blob from base64-encoded string
                   const pdfBlob = this.base64ToBlob(result, 'application/pdf');
-                  // Generate a Blob URL for the PDF
                   this.pdfUrl = URL.createObjectURL(pdfBlob);
                }
               }

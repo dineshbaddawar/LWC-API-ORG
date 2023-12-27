@@ -51,5 +51,25 @@ public class LwcUtility {
         
         return response.getBody(); // Returning the data
     }
+
+    // ================================================================================================================================
+    // Method for getting Field Set for Opportunity Record
+    @AuraEnabled
+    public static List<String> getOppFieldSetList(){
+        try{
+            List<String> oppFieldSetList = new List<String>();
+            List<Schema.FieldSetMember> FieldSetListFromOPp  = SobjectType.Opportunity.FieldSets.FiledSet_Opp.getFields();
+            for(Schema.FieldSetMember fieldsToAdd : FieldSetListFromOPp){
+                System.debug('Fields === >'+String.valueOf(fieldsToAdd.sobjectfield));
+                 oppFieldSetList.add(String.valueOf(fieldsToAdd.sobjectfield));
+            }
+            if(oppFieldSetList.size()>0){
+                return oppFieldSetList;
+            }
+        }catch(Exception e){
+            System.debug('The Error ::' + e.getMessage() + ' AND Error Line No :' + e.getLineNumber());
+            }
+           return null;
+        }
     
 }

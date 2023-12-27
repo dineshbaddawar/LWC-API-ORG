@@ -643,14 +643,25 @@ public  class UtilityClass {
     Public Static List<Sobject> getSelectedObjectList(String objectapiNameParam,List<Sobject> sobjectList){
         List<Sobject> selectedObjectList = new List<Sobject>();
         List<Sobject> selectedObjectListToInsert = new List<Sobject>();
-       
+        
         if(objectapiNameParam == 'Contact'){
-             String Query = 'SELECT Id,LastName,Email,Phone FROM '+objectapiNameParam;
+            String Query = 'SELECT Id,LastName,Email,Phone FROM '+objectapiNameParam;
             selectedObjectList = Database.query(Query);
             selectedObjectListToInsert = selectedObjectList;
         }else if(objectapiNameParam == 'Opportunity'){
             
         }
         return null;
+    }
+    
+    //=============================================================================================================================================================
+    // Used in LWC
+     @AuraEnabled(cacheable=true)
+    public Static List<Contact> getRelatedContactsLWC (String accountId){
+        List<Contact> conList = [SELECT Id,Name,AccountId FROM Contact WHERE AccountId =: accountId];
+        for(Contact con : conList){
+            System.debug('Contacts Name :::'+con.Name);
+        }
+        return conList;
     }
 }

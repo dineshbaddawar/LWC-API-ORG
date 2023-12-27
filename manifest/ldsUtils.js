@@ -4,6 +4,7 @@
  * @return {String[]} Error messages
  */
 export function reduceErrors(errors) {
+     debugger;
     if (!Array.isArray(errors)) {
         errors = [errors];
     }
