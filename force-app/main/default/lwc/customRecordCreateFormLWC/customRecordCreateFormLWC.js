@@ -8,6 +8,7 @@ export default class CustomRecordCreateFormLWC extends NavigationMixin(Lightning
 
      data;
      error;
+     @api recordId;
      createdOppRecordId;
      connectedCallback() {
           setTimeout(() => {
@@ -42,7 +43,8 @@ export default class CustomRecordCreateFormLWC extends NavigationMixin(Lightning
           }
      closeAction(){
           debugger;
-        this.dispatchEvent(new CloseActionScreenEvent());
+          this.dispatchEvent(new CloseActionScreenEvent());
+          window.location.href = 'https://utilitarianlabs-apiorg-dev-ed.lightning.force.com/lightning/o/Opportunity/list?filterName=00B5i00000BVnhoEAD';
      }
      handleSubmitButtonClick(event) {
           debugger;

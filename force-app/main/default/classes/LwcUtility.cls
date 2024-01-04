@@ -53,7 +53,7 @@ public class LwcUtility {
     }
 
     // ================================================================================================================================
-    // Method for getting Field Set for Opportunity Record
+    // Method for getting Field Set for Opportunity Record for LWC Component
     @AuraEnabled
     public static List<String> getOppFieldSetList(){
         try{
@@ -71,5 +71,89 @@ public class LwcUtility {
             }
            return null;
         }
+
+    // ================================================================================================================================
+    // Method for getting Custom Address from Account Record LWC Component
+    
+     @AuraEnabled
+    public static Map<String, Object> getAllCustomerAddress(String recordId){
+        try {
+            Map<String, Object> returnWrapperMap = new Map<String, Object>();
+            List<CustomerAddressWrapper> customerShippingAddressWrapper = new List<CustomerAddressWrapper>();
+            List<CustomerAddressWrapper> customerBillingAddressWrapper = new List<CustomerAddressWrapper>();
+            System.debug('recordId == >'+recordId);
+            if(!String.isBlank(recordId)) {
+                Account customerAcc = [SELECT Id, Name, BillingState, BillingStreet, BillingCountry, BillingPostalCode, BillingCity, ShippingState, ShippingStreet, ShippingCountry, ShippingCity, ShippingPostalCode, AccountSource FROM Account WHERE Id = :recordId];
+                 System.debug('customerAcc == >'+customerAcc);
+                if(customerAcc != null && !String.isBlank(customerAcc.BillingCountry)) {
+                    customerBillingAddressWrapper.add(new CustomerAddressWrapper('Billing', customerAcc.BillingStreet, customerAcc.BillingState, customerAcc.BillingCountry, customerAcc.BillingCity, customerAcc.BillingPostalCode, 'Billing', true));
+                    returnWrapperMap.put('ship_selected_index', 0);
+                }
+                
+                if(customerAcc != null && !String.isBlank(customerAcc.ShippingCountry)) {
+                    customerShippingAddressWrapper.add(new CustomerAddressWrapper('Shipping', customerAcc.ShippingStreet, customerAcc.ShippingState, customerAcc.ShippingCountry, customerAcc.ShippingCity, customerAcc.ShippingPostalCode,  'Shipping', true));
+                    returnWrapperMap.put('bill_selected_index', 0);
+                }
+                
+                for(Customer_Address__c custAddress :[SELECT Id, Address__Street__s, ToLabel(Address__StateCode__s), Address__PostalCode__s,  ToLabel(Address__CountryCode__s), Address__City__s, Type__c FROM Customer_Address__c WHERE Account__c =:recordId]) {
+                    if(custAddress.Type__c == 'Billing') {
+                        customerBillingAddressWrapper.add(new customerAddressWrapper(custAddress.Id, custAddress.Address__Street__s, custAddress.Address__StateCode__s, custAddress.Address__CountryCode__s, custAddress.Address__City__s, custAddress.Address__PostalCode__s, custAddress.Type__c, false));
+                    }else {
+                        customerShippingAddressWrapper.add(new customerAddressWrapper(custAddress.Id, custAddress.Address__Street__s, custAddress.Address__StateCode__s, custAddress.Address__CountryCode__s, custAddress.Address__City__s, custAddress.Address__PostalCode__s, custAddress.Type__c, false));
+                    }
+                }
+                returnWrapperMap.put('account', customerAcc);
+                returnWrapperMap.put('customer_ship_addresses', customerShippingAddressWrapper);
+                returnWrapperMap.put('customer_bill_addresses', customerBillingAddressWrapper);
+                System.debug('returnWrapperMap == >'+returnWrapperMap);
+            }
+            return returnWrapperMap;
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
+
+    @AuraEnabled
+    public static Account getAccRecord(String recordId){
+        try {
+            if(String.isBlank(recordId))
+                return null;
+            return [Select Id, Name,  BillingCity, BillingCountry, BillingPostalCode, BillingState, BillingStreet, AccountSource, 
+                    ShippingCity, ShippingCountry, ShippingPostalCode, ShippingState, ShippingStreet FROM Account where Id =:recordId];
+        } catch (Exception e) {
+            throw new AuraHandledException(e.getMessage());
+        }
+    }
+
+
+    public class CustomerAddressWrapper {
+        @auraEnabled
+        public String id;
+        @auraEnabled
+        public String street;
+        @auraEnabled
+        public String state;
+        @auraEnabled
+        public String country;
+        @auraEnabled
+        public String city;
+        @auraEnabled
+        public String type;
+        @AuraEnabled
+        public String postalCode;
+        @AuraEnabled
+        public Boolean checked;
+        
+        public CustomerAddressWrapper(String id, String street, String state, String country, String city, String postalCode, String type, Boolean checked) {
+            this.id = id;
+            this.street = street;
+            this.state = state;
+            this.country = country;
+            this.city = city;
+            this.postalCode = postalCode;
+            this.type = type;
+            this.checked = checked;
+        }
+    }
     
 }
