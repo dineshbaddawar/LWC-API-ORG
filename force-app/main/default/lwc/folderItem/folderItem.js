@@ -12,6 +12,12 @@ export default class FolderItem extends LightningElement {
      showUploadFileButton = false;
      showDeleteFileButton = false;
      myCustomVarinat;
+     showUploadFileScreen = false;
+     @api myRecordId = '0065i00000KO5xyAAD';
+
+     get acceptedFormats() {
+          return ['.pdf', '.png'];
+      }
 
      handleItemClickNew(event){
           debugger;
@@ -81,7 +87,17 @@ export default class FolderItem extends LightningElement {
      }
      
      uploadFile() {
+          this.showUploadFileScreen = true;
+          this.showPDF = false;
+          let folderName = this.selectedFolderName;
           debugger;
      }
+
+     handleUploadFinished(event) {
+          debugger;
+          // Get the list of uploaded files
+          const uploadedFiles = event.detail.files;
+          alert('No. of files uploaded : ' + uploadedFiles.length);
+      }
      
 }

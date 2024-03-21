@@ -1,4 +1,4 @@
-public class LwcUtility {
+public class LWCUtilityHelper {
     
     @AuraEnabled(cacheable=true)
     public static List<OpportunityLineItem> getOpplineItemUnderopp(string recordId){
@@ -51,9 +51,9 @@ public class LwcUtility {
         
         return response.getBody(); // Returning the data
     }
-
+    
     // ================================================================================================================================
-    // Method for getting Field Set for Opportunity Record for LWC Component
+    // Method for getting Field Set for Opportunity Record for LWC Component 1.1
     @AuraEnabled
     public static List<String> getOppFieldSetList(){
         try{
@@ -61,21 +61,21 @@ public class LwcUtility {
             List<Schema.FieldSetMember> FieldSetListFromOPp  = SobjectType.Opportunity.FieldSets.FiledSet_Opp.getFields();
             for(Schema.FieldSetMember fieldsToAdd : FieldSetListFromOPp){
                 System.debug('Fields === >'+String.valueOf(fieldsToAdd.sobjectfield));
-                 oppFieldSetList.add(String.valueOf(fieldsToAdd.sobjectfield));
+                oppFieldSetList.add(String.valueOf(fieldsToAdd.sobjectfield));
             }
             if(oppFieldSetList.size()>0){
                 return oppFieldSetList;
             }
         }catch(Exception e){
             System.debug('The Error ::' + e.getMessage() + ' AND Error Line No :' + e.getLineNumber());
-            }
-           return null;
         }
-
-    // ================================================================================================================================
-    // Method for getting Custom Address from Account Record LWC Component
+        return null;
+    }
     
-     @AuraEnabled
+    // ================================================================================================================================
+    // Method for getting Custom Address from Account Record LWC Component 1.2
+    
+    @AuraEnabled
     public static Map<String, Object> getAllCustomerAddress(String recordId){
         try {
             Map<String, Object> returnWrapperMap = new Map<String, Object>();
@@ -84,7 +84,7 @@ public class LwcUtility {
             System.debug('recordId == >'+recordId);
             if(!String.isBlank(recordId)) {
                 Account customerAcc = [SELECT Id, Name, BillingState, BillingStreet, BillingCountry, BillingPostalCode, BillingCity, ShippingState, ShippingStreet, ShippingCountry, ShippingCity, ShippingPostalCode, AccountSource FROM Account WHERE Id = :recordId];
-                 System.debug('customerAcc == >'+customerAcc);
+                System.debug('customerAcc == >'+customerAcc);
                 if(customerAcc != null && !String.isBlank(customerAcc.BillingCountry)) {
                     customerBillingAddressWrapper.add(new CustomerAddressWrapper('Billing', customerAcc.BillingStreet, customerAcc.BillingState, customerAcc.BillingCountry, customerAcc.BillingCity, customerAcc.BillingPostalCode, 'Billing', true));
                     returnWrapperMap.put('ship_selected_index', 0);
@@ -112,7 +112,9 @@ public class LwcUtility {
             throw new AuraHandledException(e.getMessage());
         }
     }
-
+    
+    // ================================================================================================================================
+    // Method for getting Custom Address from Account Record LWC Component 1.3
     @AuraEnabled
     public static Account getAccRecord(String recordId){
         try {
@@ -121,11 +123,79 @@ public class LwcUtility {
             return [Select Id, Name,  BillingCity, BillingCountry, BillingPostalCode, BillingState, BillingStreet, AccountSource, 
                     ShippingCity, ShippingCountry, ShippingPostalCode, ShippingState, ShippingStreet FROM Account where Id =:recordId];
         } catch (Exception e) {
-            throw new AuraHandledException(e.getMessage());
+            System.debug('Error  == >'+e.getMessage()+' && Error Line === >'+e.getLineNumber());
         }
+        return null;
     }
+    
+    @AuraEnabled
+    public static string updateOpportunityAddress(string shippingData,String billingData,String accountId,string opportunityId){
+        System.debug('shippingData == >'+shippingData+' && billingData == >'+billingData+' && accountId == >'+accountId+' && opportunityId == >'+opportunityId);
+        Account accBillingaddress = new Account();
+        Account accShippingaddress = new Account();
+        Opportunity oppRecToUpdate = new Opportunity();
+        Customer_Address__c billingCustomAddress = new Customer_Address__c();
+        Customer_Address__c shippingCustomAddress = new Customer_Address__c();
+        try{
+            if(string.isBlank(shippingData) || string.isBlank(billingData) || string.isBlank(accountId)){
+                return 'Billing or Shipping Data is Missing';
+            }
+            if(billingData == 'Billing'){
+                accBillingaddress = [SELECT id,Name,BillingCity, BillingCountry, BillingPostalCode, BillingState, BillingStreet FROM Account WHERE Id=:accountId];
+                System.debug('accBillingaddress == >'+accBillingaddress);
+            }            
+            if(shippingData == 'Shipping'){
+                accShippingaddress = [SELECT id,Name,ShippingCity, ShippingCountry, ShippingPostalCode, ShippingState, ShippingStreet FROM Account WHERE Id=:accountId];
+                System.debug('accShippingaddress == >'+accShippingaddress);
+            }
 
-
+            if(string.isNotBlank(opportunityId)){
+                oppRecToUpdate = [SELECT Id,Name,Billing_Address__Street__s,Billing_Address__City__s,Billing_Address__PostalCode__s,Billing_Address__StateCode__s,Billing_Address__CountryCode__s,Shipping_Address__Street__s,Shipping_Address__City__s,Shipping_Address__StateCode__s,Shipping_Address__PostalCode__s,Shipping_Address__CountryCode__s FROM Opportunity WHERE Id=:opportunityId];
+                System.debug('oppRecToUpdate == >'+oppRecToUpdate);
+                if(accBillingaddress.BillingCity !=null){
+                    oppRecToUpdate.Billing_Address__City__s = accBillingaddress.BillingCity;   
+                }
+                if(accBillingaddress.BillingCountry !=null){
+                    //  oppRecToUpdate.Billing_Address__CountryCode__s = accBillingaddress.BillingCountry;  
+                }
+                if(accBillingaddress.BillingPostalCode !=null){
+                    oppRecToUpdate.Billing_Address__PostalCode__s = accBillingaddress.BillingPostalCode;
+                }
+                if(accBillingaddress.BillingState !=null){
+                    //  oppRecToUpdate.Billing_Address__StateCode__s = accBillingaddress.BillingState;
+                }
+                if(accBillingaddress.BillingStreet !=null){
+                    oppRecToUpdate.Billing_Address__Street__s = accBillingaddress.BillingStreet;
+                }
+                if(accShippingaddress.ShippingStreet !=null){
+                    oppRecToUpdate.Shipping_Address__Street__s = accShippingaddress.ShippingStreet;
+                }
+                if(accShippingaddress.ShippingCity !=null){
+                    oppRecToUpdate.Shipping_Address__City__s = accShippingaddress.ShippingCity;
+                }
+                if(accShippingaddress.ShippingCountry !=null){
+                   // oppRecToUpdate.Shipping_Address__CountryCode__s = accShippingaddress.ShippingCountry;
+                }
+                if(accShippingaddress.ShippingPostalCode !=null){
+                    oppRecToUpdate.Shipping_Address__PostalCode__s = accShippingaddress.ShippingPostalCode;
+                }
+                if(accShippingaddress.ShippingState !=null){
+                   // oppRecToUpdate.Shipping_Address__StateCode__s = accShippingaddress.ShippingState;
+                }
+                update oppRecToUpdate;
+                System.debug('oppRecToUpdate === >'+oppRecToUpdate);
+                if(oppRecToUpdate !=null){
+                    return 'SUCCESS';
+                }
+            }
+            
+        }catch(Exception e){
+            System.debug('Error '+e.getMessage()+' && Error Line == >'+e.getLineNumber());
+        }
+        return 'ERROR';
+    }
+    
+    
     public class CustomerAddressWrapper {
         @auraEnabled
         public String id;

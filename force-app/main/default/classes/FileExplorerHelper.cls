@@ -1,42 +1,6 @@
 public class FileExplorerHelper {
     
-    public class DocumentTreeWrapper {
-        public String documentID;
-        public String documentName;
-        public List<DocumentTreeWrapper> childNodes = new List<DocumentTreeWrapper>();
-        
-        public DocumentTreeWrapper(String documentID, String documentName) {
-            this.documentID = documentID;
-            this.documentName = documentName;
-        }
-    }
-    
-    @AuraEnabled
-    public static List<DocumentTreeWrapper> getAllDocumentsForRecord(String recordId) {
-        if(String.isNotBlank(recordId)){
-            Map<Id,DocumentTreeWrapper> uiWrapper = new Map<Id,DocumentTreeWrapper>();
-            List<Document_Category__c> docList=  [Select id,Name from Document_Category__c where Opportunity__c =:recordId];
-            System.debug('docList size === >'+docList.size());
-            String Obj = '';
-            if(docList.size() > 0){
-                for(Document_Category__c appDoc : [SELECT Id, Name,(SELECT Id, Name FROM Document_Files__r) FROM Document_Category__c WHERE Opportunity__c =:recordId ORDER BY CreatedDate]) {
-                    DocumentTreeWrapper appDocWrapper;
-                    appDocWrapper = new DocumentTreeWrapper(appDoc.Id, appDoc.Name); 
-                    if(!appDoc.Document_Files__r.isEmpty()){
-                        for(Document_File__c appAttachment : appDoc.Document_Files__r) {
-                            appDocWrapper.childNodes.add(new DocumentTreeWrapper(appAttachment.Id, appAttachment.Name));
-                        }
-                    }
-                    uiWrapper.put(appDoc.Id, appDocWrapper);
-                }
-            }
-            system.debug('uiWrapper value size == >'+uiWrapper.values());
-            return uiWrapper.values();
-        }
-        return null;
-    }
-    
-    // ============================================================================================================
+    // Method to get Opportunity related Documents Category and Its Files.
     @AuraEnabled 
     public static List<Document_Category__c> getDocCateList(String opportunityId){
           List<Document_Category__c> DocCategoryList = new List<Document_Category__c>();
@@ -54,8 +18,8 @@ public class FileExplorerHelper {
        return null;
     }
     
-        // ============================================================================================================
-
+    // ============================================================================================================
+    // Method for Showing selected documents Preview using Iframe.
     @AuraEnabled
     public static string PreviewPDF(String procDocId){
         try{
@@ -66,7 +30,7 @@ public class FileExplorerHelper {
                 if(appDocAttach != null && appDocAttach.Attachement_Id__c != null){
                     Attachment att = [select id,name,body,contenttype  from attachment where id =: appDocAttach.Attachement_Id__c limit 1];
                     System.debug('att === >'+att);
-                    blobFile = EncodingUtil.base64Encode(att.body);  //  EncodingUtil.Base64Encode(att.body); 'data:application/pdf;base64,'+
+                    blobFile = EncodingUtil.base64Encode(att.body);
                     System.debug('blobFile == >'+blobFile);
                     return blobFile;
                 }
@@ -75,5 +39,18 @@ public class FileExplorerHelper {
             System.debug('The Error ::'+e.getMessage() +' AND Error Line No :'+e.getLineNumber());
         }
         return 'ERROR';
+    }
+
+     // ============================================================================================================
+    // Method for Uploading File , in selected Folder using Doctemp Name.
+    public static string uploadFileInSelectedDocFolder(string folderName,String opportunityId){
+        try{
+            if(folderName !=null && opportunityId !=null){
+                
+            }
+        }catch(Exception e){
+            System.debug('The Error ::'+e.getMessage() +' AND Error Line No :'+e.getLineNumber());
+        }
+       return null;
     }
 }

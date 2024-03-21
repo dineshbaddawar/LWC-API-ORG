@@ -20,6 +20,7 @@ public class GoogleReviewAPI {
         if (response.getStatusCode() == 200) {
             // Successfully retrieved reviews, process the response body
             String responseBody = response.getBody();
+            
             // Process the responseBody as needed
             System.debug(responseBody);
         } else {

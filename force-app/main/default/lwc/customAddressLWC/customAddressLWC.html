@@ -19,7 +19,7 @@
                      <tr key={address.id}>
                          <td>
                              <lightning-input type="checkbox" data-index={index} data-id={address.id} checked={address.checked}
-                                 onchange={onAddressSelect}></lightning-input>
+                                 onchange={onShippingAddressSelect}></lightning-input>
                          </td>
                           <td> {address.type}</td>
                          <td> {address.street}</td>
@@ -52,7 +52,7 @@
                      <tr key={address.id}>
                          <td>
                              <lightning-input type="checkbox" data-index={index} data-id={address.id} checked={address.checked}
-                                 onchange={onBillAddressSelect}></lightning-input>
+                                 onchange={onBillingAddressSelect}></lightning-input>
                          </td>
                          <td> {address.type}</td>
                          <td> {address.street}</td>
@@ -65,11 +65,15 @@
              </table>
          
          </div>
- 
+
+         <!-- <c-events-with-object oncustevent={handleEvent}></c-events-with-object> -->
+         <!-- <c-custom-record-create-form-l-w-c oncustevent={handleEvent}></c-custom-record-create-form-l-w-c> -->
+       
          <br/>
          <div class="slds-clearfix">
              <div class="slds-float_right">
-                 <lightning-button variant="brand" label="Next" disabled={nextBtn} class="slds-m-left_x-small" onclick={handleNavigate}></lightning-button>
+                <lightning-button class="slds-m-right_small" label="Cancel" onclick={closeAction} ></lightning-button>
+                 <lightning-button variant="brand" label="Submit" disabled={nextBtn} class="slds-m-left_x-small" onclick={handleNavigate}></lightning-button>
              </div>
          </div>
      </lightning-quick-action-panel>

@@ -57,6 +57,7 @@
                       $scope.dataList = result;
                     }
                 })
+                
             })
             </script>
             <div class="card" style="width:100%;">

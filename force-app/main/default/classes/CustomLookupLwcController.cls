@@ -16,7 +16,9 @@ public class CustomLookupLwcController {
             }
             system.debug('sQuery === >'+sQuery);
             List<sObject> lstOfRecords = Database.query(sQuery);
-            for (sObject obj: lstOfRecords) { returnList.add(obj); }
+            for (sObject obj: lstOfRecords) {
+                 returnList.add(obj); 
+                }
             system.debug('lstOfRecords === >'+lstOfRecords) ;
             return returnList;
         }catch(Exception e){

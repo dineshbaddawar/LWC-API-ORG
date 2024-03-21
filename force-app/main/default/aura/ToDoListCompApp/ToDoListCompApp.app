@@ -1,3 +1,3 @@
 <aura:application extends="force:slds">
-    <c:ToDoListComp/>
+    <c:profileUserComponent/>
 </aura:application>

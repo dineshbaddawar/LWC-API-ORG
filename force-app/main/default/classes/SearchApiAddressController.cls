@@ -39,7 +39,7 @@ public class SearchApiAddressController {
         if(String.isNotBlank(placeId)){
             String strURL = 'https://maps.googleapis.com/maps/api/place/details/json?'
                 + 'placeid=' + EncodingUtil.urlEncode(placeId, 'UTF-8')
-                + '&key='+GoogleMapAPIKey; 
+                + '&key='+'AIzaSyCyROBA-FkMVJVa96WdEJw7J3m8n-TWEYo'; 
             Http h = new Http();
             HttpRequest req = new HttpRequest();
             HttpResponse res = new HttpResponse();

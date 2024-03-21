@@ -1,3 +1,3 @@
 <aura:application extends="force:slds" >
-    <c:SortingDataTable/>
+    <c:recordPickerWithFilter/>
 </aura:application>

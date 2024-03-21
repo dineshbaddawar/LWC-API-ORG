@@ -1,6 +1,6 @@
 import { LightningElement,api,track,wire } from 'lwc';
-import  getopplineitmeRecord from '@salesforce/apex/LwcUtility.getOpplineItemUnderopp';
-import  SaveOpplineitem from '@salesforce/apex/LwcUtility.updateOpplineItem';
+import  getopplineitmeRecord from '@salesforce/apex/LWCUtilityHelper.getOpplineItemUnderopp';
+import  SaveOpplineitem from '@salesforce/apex/LWCUtilityHelper.updateOpplineItem';
 import { CloseActionScreenEvent } from 'lightning/actions';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
 import LightningAlert from 'lightning/alert';

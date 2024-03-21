@@ -1,5 +1,5 @@
 import { LightningElement,api,track } from 'lwc';
-import getOppFieldSetList from '@salesforce/apex/LwcUtility.getOppFieldSetList';
+import getOppFieldSetList from '@salesforce/apex/LWCUtilityHelper.getOppFieldSetList';
 import { CloseActionScreenEvent } from 'lightning/actions';
 import { NavigationMixin } from 'lightning/navigation';
 import { ShowToastEvent } from 'lightning/platformShowToastEvent';
@@ -10,6 +10,13 @@ export default class CustomRecordCreateFormLWC extends NavigationMixin(Lightning
      error;
      @api recordId;
      createdOppRecordId;
+     opprecordid;
+     selectedAccountId;
+     showOpportunityRecordPage = true;
+     showSubmitButton = false;
+     showNextButton = true;
+     showAccountAddress = false;
+
      connectedCallback() {
           setTimeout(() => {
                this.callApexMethod();
@@ -38,18 +45,62 @@ export default class CustomRecordCreateFormLWC extends NavigationMixin(Lightning
           debugger;
           console.log('onsuccess event recordEditForm', event.detail.id)
           this.createdOppRecordId = event.detail.id;
-          this.successToastMessage();
-          this.navigateToRecordPage();
+          this.opprecordid = event.detail.id;
+          this.showOpportunityRecordPage = false;
+          this.showNextButton = false;
+          this.showSubmitButton = true;
+          if (event.detail.fields.AccountId.value != null && event.detail.fields.AccountId.value != undefined) {
+               this.showAccountAddress = true;
+          } else {
+               alert('Please Choose Account, If You want to add Multiple Address');
+          }
+         
+
+            // Creates the event
+            const selectedEvent = new CustomEvent('custevent', {
+               detail :  this.createdOppRecordId
+          });
+          //dispatching the custom event
+          this.dispatchEvent(selectedEvent);
+        
           }
      closeAction(){
           debugger;
           this.dispatchEvent(new CloseActionScreenEvent());
           window.location.href = 'https://utilitarianlabs-apiorg-dev-ed.lightning.force.com/lightning/o/Opportunity/list?filterName=00B5i00000BVnhoEAD';
      }
+
+
+    
+
+
      handleSubmitButtonClick(event) {
           debugger;
           event.preventDefault(); // Prevent default form submission
           this.template.querySelector('lightning-record-edit-form').submit();
+     }
+     onchageInputOpp(event) {
+          debugger;
+          if (event.target.fieldName == 'AccountId') {
+               this.selectedAccountId = event.target.value;
+          }
+         
+        //  let fieldAPIname = event.target.fieldName;
+     }
+     // working
+     NextButtonClick(event) {
+          debugger;
+          event.preventDefault(); // Prevent default form submission
+          this.template.querySelector('lightning-record-edit-form').submit();
+             
+     }
+     handleError(event) {
+          debugger;
+          let message = event.detail.detail;
+     }
+     handleSubmit(event) {
+          debugger;
+          console.log('onsubmit event recordEditForm'+ event.detail.fields);
      }
      navigateToRecordPage() {
           debugger;
@@ -71,5 +122,7 @@ export default class CustomRecordCreateFormLWC extends NavigationMixin(Lightning
               mode: 'dismissable'
           });
           this.dispatchEvent(event);
-      }
+     }
+     
+     
 }
