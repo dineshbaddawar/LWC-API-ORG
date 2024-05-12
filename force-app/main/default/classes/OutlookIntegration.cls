@@ -104,7 +104,7 @@ public class OutlookIntegration {
         String ADtenentId = '9d94cb2f-05ce-4ac3-96a0-8a8a97437d2a';
         String endpoint = 'https://login.microsoftonline.com/' + ADtenentId + '/oauth2/v2.0/token';
         String clientId = 'f8de9f6c-0412-4fa6-8476-8458d3202e97';
-        String clientSecret = '3py8Q~DB7X0G5v4W_rKXzLxbIiF_Z4uQM_9w-akK';
+        String clientSecret =System.label.OutllokclientSecret; //'3py8Q~DB7X0G5v4W_rKXzLxbIiF_Z4uQM_9w-akK';
         String scope = 'https://graph.microsoft.com/.default';
         String redirectUri = 'https://ecolibrium--dev--c.sandbox.vf.force.com/apex/OutlookintegrationPage';
         String authtype = 'authorization_code';
