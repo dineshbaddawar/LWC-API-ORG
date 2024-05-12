@@ -278,6 +278,67 @@ public class LWCUtilityHelper {
         return JSON.serialize(MapOfDependentPicklsit);
     }
     
+    // ================================================================================================================================
+    // Method for getting Quote Line item Based on QuoteId
+    @AuraEnabled(cacheable=true)
+    public static List<QuoteLineItem> getQLIBasedOnQuoteId(string quoteId){
+        List<QuoteLineItem> QliList = new List<QuoteLineItem>(); 
+        try{
+            if(quoteId !=null){
+                QliList = [SELECT id,ListPrice,UnitPrice,Quantity,TotalPrice,QuoteId,Product2.Name,Product2.Family FROM QuoteLineItem WHERE QuoteId=:quoteId];
+                if(QliList.size()>0){
+                    return QliList;
+                }
+            }
+        }catch(Exception e){
+            System.debug('The Error ::'+e.getMessage() +' AND Error Line No :'+e.getLineNumber());
+        }
+        return null;
+    }
     
+    // ================================================================================================================================
+    // Datatable Styling in LWC
+    @AuraEnabled(cacheable=true)
+    public static List<Account> getAccounts() {
+        return [SELECT Id, Name, AnnualRevenue, Industry, Phone from Account WHERE AnnualRevenue !=null LIMIT 10];
+    }
+    
+    // ================================================================================================================================
+    // Gettig picklist values dynamically in Lightning web component using Apex
+    @AuraEnabled (Cacheable=true)
+    public static List<PicklistSet> GetPicklistFieldValuesDynamically(String objectName, String fieldName)   {
+        system.debug('objectName == >'+objectName+' && fieldName == >'+fieldName);
+        Schema.SObjectType objectType =   getSObjectTypeFromObjectName(objectName);
+        system.debug('objectType == >'+objectType);
+        Schema.DescribeSObjectResult result =   objectType.getDescribe();
+        Map<String, Schema.SObjectField> fields = result.fields.getMap();
+        Schema.DescribeFieldResult fieldResult = fields.get(fieldName).getDescribe();
+        List<Schema.PicklistEntry> ple = fieldResult.getPicklistValues();
+        List<PicklistSet> picklistValues = new List<PicklistSet>();
+        for (Schema.PicklistEntry picklistVal : ple) {
+            PicklistSet tempPicklist = new PicklistSet(picklistVal.getLabel(), picklistVal.getValue());
+            picklistValues.add(tempPicklist);
+        }
+        return picklistValues;
+    }
+    
+    public static SObjectType getSObjectTypeFromObjectName(String objectName) {
+        return ((SObject) Type.forName('Schema', objectName).newInstance()).getSObjectType();
+    }
+    
+    public class PicklistSet {
+        @AuraEnabled public String label { get; set; }
+        @AuraEnabled public String value { get; set; }
+        public PicklistSet(String label, String value){
+            this.label = label;
+            this.value = value;
+        }
+    }
+
+//================================================================================================================================
+     @AuraEnabled(Cacheable = true)
+    public static List<Contact> getContacts(){
+        return [SELECT Id, Name, FirstName,LastName, Phone, Email FROM Contact limit 10];
+    }
     
 }

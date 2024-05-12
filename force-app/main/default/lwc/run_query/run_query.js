@@ -2,8 +2,9 @@ import { LightningElement,wire,track } from 'lwc';
 import sampleMC from '@salesforce/messageChannel/myMessageChannel__c';
 import {subscribe,MessageContext} from 'lightning/messageService';
 import fetchResult from '@salesforce/apex/FetchObjects.fetchResult';
-export default class Run_query extends LightningElement {
-    
+import { NavigationMixin } from 'lightning/navigation';
+export default class Run_query extends NavigationMixin(LightningElement)  {
+    recId;
     numberOfRecord=0;
     actualQuery='';
     isDataLoad=false;
@@ -21,9 +22,8 @@ export default class Run_query extends LightningElement {
 
     @wire(fetchResult,{query:'$actualQuery'})
     dataHandler({ data, error }) {
-       // debugger;
-        if(data){
-            //console.log(JSON.stringify(data));
+        if (data) {
+            debugger;
             this.numberOfRecord=data.length;
             this.isDataLoad=true;
             this.makeDataTable(data);
@@ -36,14 +36,7 @@ export default class Run_query extends LightningElement {
 
     makeDataTable(rawData) {
         debugger;
-        //if you don't include id field in the query then by default
-        //the id field will be present at the last but if you include
-        //then in which order you write the query, in the same order
-        //it will return the data, so we have to manipulate the datatable
-        //accordingly. 
-        //console.log('makeDataTable called');
         let tempArr=this.actualQuery.split(' ')[1].split(',');
-        //console.log(JSON.stringify(tempArr));
         if(!tempArr.includes('Id'))
             tempArr.push('Id');
         this.cols=[];//initialize the array blank for saftey
@@ -58,5 +51,25 @@ export default class Run_query extends LightningElement {
             });
             this.data.push(tempObj);
         });
+    }
+
+    handleRowSelection(event) {
+        debugger;
+        this.selectedRows = event.detail.selectedRows;
+        console.log('Selected Rows:', this.selectedRows);
+
+        this.recId = this.selectedRows.map(row => row.Id);
+        console.log('Selected Record IDs:', this.recId);
+        if (this.recId.length != 0) {
+            this[NavigationMixin.Navigate]({
+                type: 'standard__recordPage',
+                attributes: {
+                    recordId: this.recId.toString(),
+                    objectApiName: 'Account',
+                    actionName: 'view'
+                },
+            });
+        }
+        
     }
 }

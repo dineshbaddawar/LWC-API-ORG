@@ -1,3 +1,3 @@
 <aura:application extends="force:slds" >
-    <c.LightningDataTable/>
+    <c.testdependentpicklist/>
 </aura:application>

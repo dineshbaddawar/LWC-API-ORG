@@ -5,7 +5,7 @@ public class BatchClassDatabaseStateful implements Database.Batchable <Sobject> 
     }
     public void Execute(Database.BatchableContext bc, List<Account> accList){
         List<Contact> conList = new List<Contact>();
-         System.debug('Previous contactRecordProcessed = '+contactRecordProcessed);
+         System.debug('Previous contactRecordProcessed 1 == > '+contactRecordProcessed);
         if(accList.size()>0){
             for(Account acc : accList){
                 for(Contact con : acc.Contacts){
@@ -14,8 +14,9 @@ public class BatchClassDatabaseStateful implements Database.Batchable <Sobject> 
                     contactRecordProcessed = contactRecordProcessed +1;
                 }
             }
-            System.debug('contactRecordProcessed :: = '+contactRecordProcessed);
+            System.debug('contactRecordProcessed 2 == > '+contactRecordProcessed);
             update conList;
+              System.debug('Updated conList == >'+conList.size());
         }
     }
     public void Finish(Database.BatchableContext bc){
