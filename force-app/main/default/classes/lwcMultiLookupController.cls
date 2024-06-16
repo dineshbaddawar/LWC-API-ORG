@@ -7,7 +7,7 @@
  */
 
 public with sharing class lwcMultiLookupController {
-    public lwcMultiLookupController() {
+    public lwcMultiLookupController() { 
 
     }
     @AuraEnabled(cacheable=true)
