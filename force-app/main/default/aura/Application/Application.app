@@ -11,6 +11,6 @@
     <!--c:AnimalCmp/-->
     <!--c:AuraSpinner/-->
     <!--c:ParentInlineEdit /-->
-    
+     <c:testdependentpicklist />
     
 </aura:application>

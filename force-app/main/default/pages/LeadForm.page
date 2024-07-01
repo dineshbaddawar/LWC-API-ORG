@@ -27,9 +27,13 @@
             .controller('myCtrl', function($scope){
                 $scope.data = leadObj;
                 $scope.leadId = leadObj.Id;
+                $scope.selectedOption = '';
                 //  $scope.dateFiled = new Date(leadObj.Followup_Date__c);
                 
-                
+                $scope.optionChanged = function() {
+                debugger;
+                    var value = $scope.selectedOption; 
+                }
                 
                 $scope.saveleadData = function(){
                     delete $scope.data.attributes;
@@ -54,9 +58,10 @@
                 debugger;
                 LeadFormController.getPickListValuesMethod(obj,field,function(result,event){
                     if(event.status){
-                      $scope.dataList = result;
+                        $scope.dataList = result;
                     }
                 })
+                
             })
             </script>
             <div class="card" style="width:100%;">
@@ -64,9 +69,30 @@
                     <h3  align="center" style=" margin-top: 10px;font-family: ui-monospace;"> Lead Details Information</h3>
                 </div>
                 
+                <!--
+                <div ng-app="myApp" ng-controller="myCtrl">
+                    
+                    <label><input type="radio" ng-model="selectedOption" ng-value="'Option 1'" ng-change="optionChanged()"/> Option 1</label>
+                    <label><input type="radio" ng-model="selectedOption" ng-value="'Option 2'" ng-change="optionChanged()"/> Option 2</label>
+                    <label><input type="radio" ng-model="selectedOption" ng-value="'Option 3'" ng-change="optionChanged()"/> Option 3</label>
+                    <p>Selected option: {{ selectedOption }}</p>
+                </div> -->
+                
                 <div class="container mt-2">
                     <div style="font-size: 21px;padding: 5px;background: darkgray;margin-bottom: 12px;margin-top: 24px;text-align: center;margin-right: 12px;">Basic Details</div>
                     <div class="mb-2">
+                        
+                         <div class="form-row align">
+                                <div class="form-group col-md-6 px-2 subHeads">
+                                    <label for="firstName">First Name<span class="asterisk"> *</span></label>
+                                    <input type="text" class="form-control" id="firstName" required="" ng-model=""/>
+                                </div>
+                                <div class="form-group col-md-6 px-2 subHeads">
+                                    <label for="middleName">Middle Name</label>
+                                    <input type="text" class="form-control" id="middleName" ng-model=""/>
+                                </div>
+                                                              
+                            </div>
                         <form class="row g-2">
                             <div class="col-auto">
                                 <label class="form-label" for="form11Example4" style="margin-top: -2px; margin-bottom: 4px;margin-left: 6px;">FirstName</label>
@@ -119,12 +145,12 @@
                                 <select ng-model="selectedName" ng-options="x for x in dataList"/>
                             </div>
                             
-                           
+                            
                         </div>
                     </form>  
                 </div>
                 
-               
+                
                 <div class="text-center">
                     <button type="submit" ng-click="saveleadData()" class="btn btn-primary">Submit</button>
                 </div>

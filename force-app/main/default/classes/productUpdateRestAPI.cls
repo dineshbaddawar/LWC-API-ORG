@@ -41,7 +41,7 @@ global class productUpdateRestAPI {
         }
         update reqProduct.valueS();
             System.debug('update Produt Records ::'+reqProduct.valueS());
-        return 'Update SUCCESS : '+'Product Id :'+reqProduct.keyset();
+        return 'Update SUCCESS 1 : '+'Product Id :'+reqProduct.keyset();
     }
 
     public class ResonseWrapperMethod{
@@ -55,7 +55,7 @@ global class productUpdateRestAPI {
     
 }
 
-/*
+/* JSON Body
  [
     {
 

@@ -1,6 +1,6 @@
 ({
     onblur : function(component,event,helper){
-        debugger;
+       // debugger;
         // on mouse leave clear the listOfSeachRecords & hide the search result component 
         component.set("v.listOfSearchRecords", null );
         component.set("v.SearchKeyWord", '');
@@ -9,7 +9,7 @@
         $A.util.removeClass(forclose, 'slds-is-open');
     },
     onfocus : function(component,event,helper){
-        debugger;
+       // debugger;
         // show the spinner,show child search result component and call helper function
         $A.util.addClass(component.find("mySpinner"), "slds-show");
         component.set("v.listOfSearchRecords", null ); 
@@ -22,7 +22,7 @@
     },
     
     keyPressController : function(component, event, helper) {
-        debugger;
+       // debugger;
         $A.util.addClass(component.find("mySpinner"), "slds-show");
         // get the search Input keyword   
         var getInputkeyWord = component.get("v.SearchKeyWord");

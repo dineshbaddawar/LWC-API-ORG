@@ -14,42 +14,37 @@ global class APItoFindOwnerId {
                 System.debug('leadList---> '+leadList);
                 if(!leadList.isEmpty()){
                     for(Lead Ld : leadList){
-                        responseJSON.Message = 'Lead Found';
-                        responseJSON.OwnerId = Ld.OwnerId;
-                        responseJSON.Email = Ld.owner.UserName;
-                        responseJSON.LeadId = Ld.Id;
+                        responseJSON.Message = 'Lead Record Found Successfully !';
                         responseJSON.success = true;
+                        responseJSON.leadRecord = Ld;
                     }
                 }else{
-                    responseJSON.Message = 'New Lead Created';
+                    responseJSON.Message = 'New Lead Record Created Successfully !';
                     Lead leadRecInstance = new Lead(lastname='--',Company='--',Phone=leadRec.phone);
                     insert leadRecInstance;
-                    responseJSON.OwnerId = UserInfo.getUserId();
-                    responseJSON.Email = UserInfo.getUserName();
-                    responseJSON.LeadId = leadRecInstance.Id;
                     responseJSON.success = true;
+                    responseJSON.leadRecord = leadRecInstance;
                 }
             } else{
                 responseJSON.Message = 'Please Provide Mobile No.';
                 responseJSON.success = false;
             }
         }catch(Exception e){
-          HandleException.CreateErrorMsg('APItoFindOwnerId', 'findOwnerId', e);
+            HandleException.CreateErrorMsg('APItoFindOwnerId', 'findOwnerId', e);
         }
         return responseJSON;
     }
     global class responseWrapper{
         global String Message;
-        global String OwnerId;
-        global String Email;
-        global String Leadid;
         global boolean success;
+        global Lead leadRecord;
+        global String ErrorMessage;
     }
     
     /*
-   
+JSNO Body
 {
 "Phone": "9098909890988"
 }
-     */
+*/
 }

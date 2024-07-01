@@ -23,10 +23,14 @@ global class createPlantRestAPI {
             if(!plantList.isEmpty()){
                 insert plantList;
                 responseJSON.Message = 'SUCCESS';
+                responseJSON.plantCreatedlist = plantList;
                 responseJSON.response = plantList.size() +' Record Created Successfully';
+            }else{
+                responseJSON.Message = 'ERROR';
+                responseJSON.response = '0 Record Created Successfully';
             }
-            System.debug(' Record Created Size :::'+plantList.size());
-            System.debug('First Record ID ::'+plantList[0].Id);
+           // System.debug(' Record Created Size :::'+plantList.size());
+          //  System.debug('First Record ID ::'+plantList[0].Id);
             return responseJSON;
             
         }catch(Exception e){
@@ -39,6 +43,7 @@ global class createPlantRestAPI {
     global class responseWrapper{
         global String Message;
         global string response;
+        global List<Plant__c> plantCreatedlist;
     }
 }
 

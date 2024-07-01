@@ -1,3 +1,5 @@
 <aura:application extends="force:slds">
-    <c:ToDoListComp/>
+    <!--c:customLookupLWC--> 
+      <!--c:profileUserComponent-->
+    <c:multiSelectComp/>
 </aura:application>

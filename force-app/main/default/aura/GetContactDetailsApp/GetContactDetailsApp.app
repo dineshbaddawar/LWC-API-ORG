@@ -7,5 +7,5 @@
  <!--  <c:GetAccountDetails/>  -->
        <!-- <c:GetContactDetails/> -->
     <!--     -->
-    <c:CRUD_OperationContact/>
+    <c:lwcMultiLookup/>
 </aura:application>
